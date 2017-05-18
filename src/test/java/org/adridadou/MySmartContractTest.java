@@ -10,7 +10,7 @@ import org.adridadou.ethereum.propeller.values.EthAccount;
 import org.adridadou.ethereum.propeller.values.EthAddress;
 import org.adridadou.ethereum.propeller.values.EthValue;
 import org.adridadou.ethereum.propeller.values.SoliditySourceFile;
-import org.ethereum.jsonrpc.JsonRpc;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,11 +27,15 @@ public class MySmartContractTest {
             .forTest(TestConfig.builder().balance(account1, EthValue.ether(100)).build());
 
     @Test
-    public void testMetaCoin() throws ExecutionException, InterruptedException {
-        CompilationResult compilationResult = ethereumFacade.compile(SoliditySourceFile.from(new File("truffle/contracts/MetaCoin.sol")));
-        SolidityContractDetails metaCoinResult = compilationResult.findContract("MetaCoin").get();
-        EthAddress contractAddress = ethereumFacade.publishContract(metaCoinResult, account1).get();
+    public void testToken() throws ExecutionException, InterruptedException {
+        CompilationResult compilationResult = ethereumFacade.compile(SoliditySourceFile.from(new File("src/contracts/Token.sol")));
+        SolidityContractDetails tokenDetails = compilationResult.findContract("Token").get();
+        EthAddress contractAddress = ethereumFacade
+                .publishContract(tokenDetails, account1, Long.valueOf(1000000000), Long.valueOf(1000)).get();
 
-        IMetaCoin metaCoin = ethereumFacade.createContractProxy(metaCoinResult, contractAddress, account1, IMetaCoin.class);
+        IToken token = ethereumFacade.createContractProxy(tokenDetails, contractAddress, account1, IToken.class);
+        Assert.assertEquals(token.balances(account1.getAddress()), new Long(10000));
+
+
     }
 }
