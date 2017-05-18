@@ -14,12 +14,13 @@ contract Token {
         balances[owner] = _supply / 10;
     }
     
-    function buy() payable {
+    function buy() payable returns (bool) {
         uint tokensToTransfer = msg.value / price;
         if (tokensToTransfer > supply)
             throw;
         balances[msg.sender] = tokensToTransfer;
         supply -= tokensToTransfer;
+        return true;
     }
     
     function transfer(address _to, uint _amount) returns (bool) {
@@ -33,7 +34,7 @@ contract Token {
     function payOut() returns (bool) {
         if (msg.sender != owner)
             throw;
-        
-        return msg.sender.send(this.balance);
+        bool res = msg.sender.send(this.balance);
+        return res;
     }
 }

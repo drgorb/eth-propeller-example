@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.adridadou</groupId>
             <artifactId>eth-propeller-ethj</artifactId>
-            <version>0.3</version>
+            <version>0.6</version>
             <scope>test</scope>
         </dependency>
 

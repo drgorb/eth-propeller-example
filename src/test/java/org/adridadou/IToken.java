@@ -16,7 +16,7 @@ public interface IToken {
     Long supply();
     EthAddress owner();
 
-    Payable buy();
+    Payable<Boolean> buy();
 
     CompletableFuture<Boolean> transfer(EthAddress to, Long amount);
 
